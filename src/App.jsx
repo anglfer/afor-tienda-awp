@@ -2,24 +2,32 @@ import { useEffect, useState } from "react";
 import PWABadge from "./PWABadge.jsx";
 import "./App.css";
 
+function BotonAGG({ onClick }) {
+  return (
+    <button className="bg-blue-500 text-white p-2 mr-2" onClick={onClick}>
+      Agregar producto
+    </button>
+  );
+}
+
+function BotonQuitar({ onClick }) {
+  return (
+    <button className="bg-red-500 text-white p-2" onClick={onClick}>
+      Disminuir producto
+    </button>
+  );
+}
+
 function BtnProducto(producto) {
   const [count, setCount] = useState(producto.stock);
+
   return (
     <div className="mt-3">
-      <button
-        className="bg-blue-500 text-white p-2 mr-2"
-        onClick={() => setCount((count) => count + 1)}
-      >
-        Agregar producto
-      </button>
+      <BotonAGG onClick={() => setCount((count) => count + 1)} />
 
-      <button
-        className="bg-red-500 text-white p-2"
-        onClick={() => setCount((count) => count - 1)}
-      >
-        Eliminar producto
-      </button>
-      <div className="mt-2">producto: {count}</div>
+      <BotonQuitar onClick={() => setCount((count) => count - 1)} />
+
+      <div className="mt-2">Producto: {count}</div>
     </div>
   );
 }
