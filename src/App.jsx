@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PWABadge from "./PWABadge.jsx";
 import "./App.css";
 
@@ -39,45 +39,63 @@ function Producto(producto) {
   );
 }
 
-const esperar = (milisegundos) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, milisegundos);
-  });
-};
+const productos = [
+  {
+    nombre: "ejemplo 1",
+    descripcion: "este es el ejemplo 1 de la funcion",
+    img: "/1images.jpg",
+  },
+  {
+    nombre: "ejemplo2",
+    descripcion: "esto es el ejemplo 2",
+    img: "/2images.png",
+  },
+  {
+    nombre: "ejemplo3",
+    descripcion: "esto es el ejemplo 3",
+    img: "/3images.png",
+  },
+  {
+    nombre: "ejempl4",
+    descripcion: "esto es el ejemplo 4",
+    img: "/favicon.svg",
+  },
+];
 
-async function CargarProductos() {
-  await esperar(3000);
+function App() {
+  const [productosVisibles, setProductosVisibles] = useState(0);
+
+  useEffect(() => {
+    let cancelado = false;
+    const esperar = (milisegundos) =>
+      new Promise((resolve) => setTimeout(resolve, milisegundos));
+
+    async function cargarProductos() {
+      await esperar(3000);
+
+      for (let i = 0; i < productos.length; i++) {
+        if (cancelado) return;
+        setProductosVisibles(i + 1);
+
+        if (i < productos.length - 1) {
+          await esperar(1000);
+        }
+      }
+    }
+
+    cargarProductos();
+    return () => {
+      cancelado = true;
+    };
+  }, []);
 
   return (
     <div className="p-5">
-      <Producto
-        nombre="ejemplo 1"
-        descripcion="este es el ejemplo 1 de la funcion"
-        img="/1images.jpg"
-      />
-
-      <Producto
-        nombre="ejemplo2"
-        descripcion="esto es el ejemplo 2"
-        img="public\2images.png"
-      />
-
-      <Producto
-        nombre="ejemplo3"
-        descripcion="esto es el ejemplo 3"
-        img="public\3images.png"
-      />
-      <Producto
-        nombre="ejempl4"
-        descripcion="esto es el ejemplo 4"
-        img="public\favicon.svg.png"
-      />
+      {productos.slice(0, productosVisibles).map((producto) => (
+        <Producto key={producto.nombre} {...producto} />
+      ))}
     </div>
   );
-}
-
-function App() {
-  return <CargarProductos />;
 }
 
 export default App;
